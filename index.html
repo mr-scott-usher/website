@@ -135,6 +135,18 @@
       border-radius: 10px;
     }
 
+    .log-reset-wrap {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .log-reset-btn {
+      width: auto;
+      min-width: 190px;
+      padding: 0 16px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -225,6 +237,9 @@
         <tbody id="logBody"></tbody>
       </table>
     </div>
+    <div class="log-reset-wrap">
+      <button id="resetLogBtn" class="log-reset-btn" type="button">Activity Log Reset</button>
+    </div>
   </main>
 
   <script>
@@ -233,6 +248,7 @@
     const form = document.getElementById('checkinForm');
     const logBody = document.getElementById('logBody');
     const studentIdInput = document.getElementById('studentId');
+    const resetLogBtn = document.getElementById('resetLogBtn');
 
     const scannerState = {
       buffer: '',
@@ -299,6 +315,12 @@
 
     function saveLogEntries(entries) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    }
+
+    function clearLogEntries() {
+      saveLogEntries([]);
+      LEGACY_KEYS.forEach((key) => localStorage.removeItem(key));
+      logBody.innerHTML = '';
     }
 
     function findEntryIndex(entries, targetEntry) {
@@ -494,6 +516,10 @@
       form.reset();
       studentIdInput.focus();
       updateTimers();
+    });
+
+    resetLogBtn.addEventListener('click', () => {
+      clearLogEntries();
     });
 
     hydrateLogFromStorage();
